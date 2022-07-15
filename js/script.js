@@ -20,6 +20,7 @@ function logIn() {
     return ingresar
 }
 
+
 // Clases
 class Cerveza {
     constructor(estilo, nombre, precio, litros) {
@@ -38,26 +39,53 @@ class Cerveza {
     }
 }
 
+class Envio {
+    constructor (nombre, direccion, localidad, codigoPostal){
+        this.nombre = nombre;
+        this.direccion = direccion;
+        this.localidad = localidad;
+        this.codigoPostal = codigoPostal;
+    };
+};
+const datos = [];
+
+function envio() {
+    alert ("Complete el formulario para realizar el envio")
+    const nombreCliente = prompt ("Ingrese su nombre y apellido");
+    const direccionCliente = prompt ("Ingrese su direccion");
+    const localidadCliente = prompt ("Ingrese la localidad donde se encuentra");
+    const codigoPostalCliente = prompt ("Ingrese su codigo postal")
+
+    datos.push (new Envio (nombreCliente, direccionCliente, localidadCliente, codigoPostalCliente));
+
+    for (const producto of datos) {
+        alert ("Confirme los datos para el envio:\n" + producto.nombre + "\n" + producto.direccion + "\n" + producto.localidad + "\n" + producto.codigoPostal);
+    };
+};
+
+
 // Main
 const drago = new Cerveza("roja", "Drago", 100, 7);
 const larry = new Cerveza("negra", "Larry guaits", 100, 7);
 const apollo = new Cerveza("negra", "Apollo", 100, 7);
 const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7);
 
-const ingreso = logIn()
+
+const ingreso = logIn();
 
 if (ingreso) {
-
+    
     const menuCervezas = `Elegí una cereveza del menú:
     [1] ${drago.nombre} - ${drago.estilo} $${drago.precio}
     [2] ${larry.nombre} - ${larry.estilo} $${larry.precio}
     [3] ${apollo.nombre} - ${apollo.estilo} $${apollo.precio}
     [4] ${trigo.nombre} - ${trigo.estilo} $${trigo.precio}
     [0] Salir.`;
-
+    
     let opcion ;
     let salir = false;
     let birraElegida;
+    //const carrito = [];
 
     do {
         opcion = prompt(menuCervezas)
@@ -96,20 +124,23 @@ if (ingreso) {
     
     let birraCantidad = prompt ("¿Cuantas unidades de " + birraElegida.nombre + " queres?");
 
-    while (birraCantidad < 0) {
-        // Como evitar un ingreso no numerico (letras)?
-        alert ('Cantidad incorrecta');
+    while (isNaN(birraCantidad) || birraCantidad <= 0) {
+        if (isNaN(birraCantidad)) {
+            alert ("Ingresa un numero")
+        } else {
+            alert ('Cantidad incorrecta');
+        };
         birraCantidad = prompt ("¿Cuantas unidades de " + birraElegida.nombre + " queres?");
-    } 
+    };
 
     let total = birraElegida.totalIva() * birraCantidad;
 
-    const ticket = birraElegida.nombre + ":\n" 
-                    + birraCantidad + "x" + birraElegida.precio + 
-                    "\n Total: $" + total;
+    const ticket = birraElegida.nombre + ":\n" + birraCantidad + "x" + birraElegida.precio + "\n Total: $" + total;
 
     alert(ticket);
     
 
+};
 
-}
+const tarea = envio ()
+
