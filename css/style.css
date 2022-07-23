@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+    padding: 0%;
+    margin: 0%;
+}
+
+.offcanvas {
+    background-color: rgb(226, 58, 45);
+    opacity: 0.9;
+}
+
+.offcanvas-start {
+    width: 190px;
+}
+
+.navbar-dark img {
+    height: 80px;
+    width: 70px;
+}
+
+.navbar-dark .navbar-nav {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: goldenrod;
+    -webkit-transition: all 0.7s;
+    transition: all 0.7s;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: darkred;
+}
+
+nav {
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(85%, rgba(102, 7, 7, 0.726)),
+        to(rgba(14, 9, 9, 0.849))
+    );
+    background-image: linear-gradient(rgba(102, 7, 7, 0.726) 85%, rgba(14, 9, 9, 0.849));
+    width: 100%;
+}
+
+.bodyBirra h1 {
+    color: whitesmoke;
+    font-family: "Krub", sans-serif;
+    font-weight: 500;
+    opacity: 1;
+    margin: 0.5rem 0 0.5rem;
+    font-size: 2em;
+}
+
+.bodyBirra {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    background-color: rgba(46, 19, 19, 0.774);
+}
+
+.bodyBirra::before {
+    content: "";
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 0px;
+    width: 100vw;
+    background-image: url(../img/fondoindexmobile.png);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.bodyBirra h1 {
+    color: whitesmoke;
+    font-family: "Krub", sans-serif;
+    font-weight: 500;
+    opacity: 1;
+    margin: 0.5rem 0 0.5rem;
+    font-size: 2em;
+}
+
+.carritoLista {
+    width: 200px;
+    border: whitesmoke solid 2px;
+    margin: 2em;
+}
+
+.imgBirraSelect{
+    height: 50px;
+    width: 60px;
+}
+
+.datosCliente {
+    width: 200px;
+    border: goldenrod solid 2px;
+    margin: 2em;
+}
+
+footer {
+    background-color: black;
+    font-size: 0.9em;
+}
+
+footer .link {
+    text-decoration: none;
+    color: darkgoldenrod;
+    -webkit-transition: all 0.7;
+    transition: all 0.7;
+}
+
+footer .link:hover {
+    color: crimson;
+}
+
+footer .row {
+    border-bottom: 2px solid gray;
+}
+
+footer .row span {
+    color: darkgoldenrod;
+}
+
+footer .row h6 {
+    color: crimson;
+}
+
+footer .redes {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+footer .redes .derechos {
+    text-align: center;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+    color: cornsilk;
+}
+
+footer .redes .linkRedes {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+footer .redes img {
+    height: 25px;
+    width: 25px;
+    margin: 7px;
+    text-decoration: none;
+    font-size: 1rem;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+}
+
+footer .redes img:hover {
+    height: 35px;
+    width: 35px;
+    margin: 0;
+}
+
+@media (min-width: 768px) {
+    .navbar-dark img {
+        height: 100px;
+        width: 90px;
+    }
+    .navbar-dark .navbar-brand {
+        margin-right: 0;
+        padding: 1em;
+    }
+    .navbar-dark .nav-link {
+        font-size: 1.2em;
+        color: goldenrod;
+    }
+    .navbar-dark .nav-link:hover {
+        background-color: black;
+        color: darkred;
+    }
+
+    .redes {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -ms-flex-pack: distribute;
+        justify-content: space-around;
+    }
+    .redes .derechos {
+        font-size: 1.3em;
+    }
+}
+
+@media (min-width: 1024px) {
+    .navbar-dark img {
+        height: 120px;
+        width: 110px;
+    }
+    .navbar-dark .nav-link {
+        padding: 0.5em 1em;
+        font-size: 1.8em;
+    }
+}

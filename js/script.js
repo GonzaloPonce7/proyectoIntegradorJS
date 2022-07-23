@@ -124,19 +124,28 @@ function envio() {
     )
   );
 
-  for (const producto of datosCliente) {
-    alert(
-      "Confirme los datos para el envio:\n" +
-        producto.nombre +
-        "\n" +
-        producto.direccion +
-        "\n" +
-        producto.localidad +
-        "\n" +
-        producto.codigoPostal
-    );
-  }
-}
+  
+  
+  for (const datosLista of datosCliente) {
+      let contenedor = document.createElement("li");
+      contenedor.innerHTML = `Datos para el envio:
+                                <h4> ${datosLista.nombre}<h4>
+                                <h4> ${datosLista.direccion}<h4>
+                                <h4> ${datosLista.localidad}<h4>
+                                <h4> ${datosLista.codigoPostal}<h4>`;
+                                console.log(carritoDiv);
+                                document.body.appendChild(carritoDiv);
+                                // "Confirme los datos para el envio:\n" +
+                                //   producto.nombre +
+                                //   "\n" +
+                                //   producto.direccion +
+                                //   "\n" +
+                                //   producto.localidad +
+                                //   "\n" +
+                                //   producto.codigoPostal
+                                
+                              };
+};
 
 // Main
 const drago = new Cerveza("roja", "Drago", 100, 7, 1);
@@ -145,6 +154,7 @@ const apollo = new Cerveza("negra", "Apollo", 100, 7, 1);
 const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7, 1);
 const carrito = new Carrito();
 const datosCliente = [];
+let carritoDiv= document.getElementsByClassName ('carritoLista');
 
 const ingreso = logIn();
 
