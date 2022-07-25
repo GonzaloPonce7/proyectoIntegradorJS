@@ -95,10 +95,14 @@ nav {
     font-size: 2em;
 }
 
-.carritoLista {
+.listaCliente {
     width: 200px;
     border: whitesmoke solid 2px;
     margin: 2em;
+    list-style: none;
+    font-family: "Krub", sans-serif;
+    color: aliceblue;
+    padding-left: 10px;
 }
 
 .imgBirraSelect{
@@ -106,11 +110,6 @@ nav {
     width: 60px;
 }
 
-.datosCliente {
-    width: 200px;
-    border: goldenrod solid 2px;
-    margin: 2em;
-}
 
 footer {
     background-color: black;

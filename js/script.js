@@ -8,19 +8,27 @@ class Cerveza {
     this.litros = litros < 0 ? 0 : litros;
     this.cantidad = cantidad < 0 ? 0 : cantidad;
     this.vendido = false;
-  };
+  }
   totalIva() {
     return this.precio * this.cantidad * 1.21;
-  };
-  
+  }
+
   vender() {
     this.vendido = true;
-  };
+  }
 
   mostrar() {
-    return "Nombre: " + this.nombre + " x " + this.cantidad + " Total = $" + this.totalIva() + "\n";
-  };
-};
+    return (
+      "Nombre: " +
+      this.nombre +
+      " x " +
+      this.cantidad +
+      " Total = $" +
+      this.totalIva() +
+      "\n"
+    );
+  }
+}
 
 class Cliente {
   constructor(nombre, direccion, localidad, codigoPostal) {
@@ -40,7 +48,9 @@ class Carrito {
     //buscar si la cerveza se encuentra dentro de la lista.
     //Si no la encuentra, agregar.
     //Si la encuentra cantidad++
-    let cervezaBuscada = this.cervezas.find((el) => el.nombre === cerveza.nombre);
+    let cervezaBuscada = this.cervezas.find(
+      (el) => el.nombre === cerveza.nombre
+    );
 
     if (cervezaBuscada == undefined) {
       this.cervezas.push(cerveza);
@@ -53,11 +63,13 @@ class Carrito {
     //buscar si la cerveza se encuentra dentro de la lista.
     //si la encuentra, borrar
     //si no la encuentra, no hacer nada
-    let listafiltrada = this.cervezas.filter((el) => el.nombre != cerveza.nombre);
+    let listafiltrada = this.cervezas.filter(
+      (el) => el.nombre != cerveza.nombre
+    );
     this.cervezas = listafiltrada;
-  };
+  }
 
-  vaciar () {
+  vaciar() {
     this.cervezas = [];
   }
 
@@ -65,27 +77,29 @@ class Carrito {
     //buscar si la cerveza se encuentra dentro de la lista.
     //si la encuentro, restar cantidad
     //si no la encuentro, no hace nada.
-    let cervezaBuscada = this.cervezas.find((el) => el.nombre === cerveza.nombre);
+    let cervezaBuscada = this.cervezas.find(
+      (el) => el.nombre === cerveza.nombre
+    );
 
     if (cervezaBuscada != undefined) {
-        cervezaBuscada.cantidad--;
-    };
-  };
+      cervezaBuscada.cantidad--;
+    }
+  }
 
   listar() {
-    let texto = '';
-    this.cervezas.forEach((e) => texto += e.mostrar());
+    let texto = "";
+    this.cervezas.forEach((e) => (texto += e.mostrar()));
     texto += "Total: $" + this.total();
-    alert (texto);
-  };
+    alert(texto);
+  }
 
-  total () {
+  total() {
     //Sumar totalIva de cada cerveza y return
     let total = 0;
-    this.cervezas.forEach(e => total += e.totalIva());
+    this.cervezas.forEach((e) => (total += e.totalIva()));
     return total;
-  };
-};
+  }
+}
 
 // Funciones
 function logIn() {
@@ -124,27 +138,26 @@ function envio() {
     )
   );
 
-  
-  
   for (const datosLista of datosCliente) {
-      let contenedor = document.createElement("li");
-      contenedor.innerHTML = `Datos para el envio:
-                                <h4> ${datosLista.nombre}<h4>
-                                <h4> ${datosLista.direccion}<h4>
-                                <h4> ${datosLista.localidad}<h4>
-                                <h4> ${datosLista.codigoPostal}<h4>`;
-                                console.log(carritoDiv);
-                                document.body.appendChild(carritoDiv);
-                                // "Confirme los datos para el envio:\n" +
-                                //   producto.nombre +
-                                //   "\n" +
-                                //   producto.direccion +
-                                //   "\n" +
-                                //   producto.localidad +
-                                //   "\n" +
-                                //   producto.codigoPostal
-                                
-                              };
+    let contenedor = document.createElement("li");
+    contenedor.innerHTML = `Datos para el envio:
+                            <h4> ${datosLista.nombre}<h4>
+                            <h4> ${datosLista.direccion}<h4>
+                            <h4> ${datosLista.localidad}<h4>
+                            <h4> ${datosLista.codigoPostal}<h4>`;
+    carritoDiv = document.getElementById("listaCliente");
+    console.log(carritoDiv);
+    //document.body.appendChild(carritoDiv);
+    carritoDiv.appendChild(contenedor);
+    // "Confirme los datos para el envio:\n" +
+    //   producto.nombre +
+    //   "\n" +
+    //   producto.direccion +
+    //   "\n" +
+    //   producto.localidad +
+    //   "\n" +
+    //   producto.codigoPostal
+  };
 };
 
 // Main
@@ -154,7 +167,7 @@ const apollo = new Cerveza("negra", "Apollo", 100, 7, 1);
 const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7, 1);
 const carrito = new Carrito();
 const datosCliente = [];
-let carritoDiv= document.getElementsByClassName ('carritoLista');
+
 
 const ingreso = logIn();
 
