@@ -106,10 +106,10 @@ function logIn() {
   let savedPass = "birra";
   let ingresar = false;
   let i = 3;
-
+  
   while (i > 0 && ingresar == false) {
     let userPass = prompt("Ingrese su password. Tiene " + i + " intentos");
-
+    
     if (userPass == savedPass) {
       alert("Bienvenido al carrito comunista");
       ingresar = true;
@@ -118,137 +118,152 @@ function logIn() {
       alert("Error de password, le quedan " + i + " intentos");
     }
   }
-
+  
   return ingresar;
-}
+};
+
+
 
 function envio() {
   alert("Complete el formulario para realizar el envio");
-  const nombreCliente = prompt("Ingrese su nombre y apellido");
-  const direccionCliente = prompt("Ingrese su direccion");
-  const localidadCliente = prompt("Ingrese la localidad donde se encuentra");
-  const codigoPostalCliente = prompt("Ingrese su codigo postal");
-
-  datosCliente.push(
-    new Cliente(
-      nombreCliente,
-      direccionCliente,
-      localidadCliente,
-      codigoPostalCliente
-    )
-  );
-
-  for (const datosLista of datosCliente) {
-    let contenedor = document.createElement("li");
-    contenedor.innerHTML = `Datos para el envio:
-                            <h4> ${datosLista.nombre}<h4>
-                            <h4> ${datosLista.direccion}<h4>
-                            <h4> ${datosLista.localidad}<h4>
-                            <h4> ${datosLista.codigoPostal}<h4>`;
-    carritoDiv = document.getElementById("listaCliente");
-    console.log(carritoDiv);
-    //document.body.appendChild(carritoDiv);
-    carritoDiv.appendChild(contenedor);
-    // "Confirme los datos para el envio:\n" +
-    //   producto.nombre +
-    //   "\n" +
-    //   producto.direccion +
-    //   "\n" +
-    //   producto.localidad +
-    //   "\n" +
-    //   producto.codigoPostal
+  const btnEnvio = document.getElementById('boton');
+  
+  function formAlert () {
+    alert('Envio confirmado. Muchas gracias');
   };
-};
-
-// Main
-const drago = new Cerveza("roja", "Drago", 100, 7, 1);
-const larry = new Cerveza("negra", "Larry guaits", 100, 7, 1);
-const apollo = new Cerveza("negra", "Apollo", 100, 7, 1);
-const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7, 1);
-const carrito = new Carrito();
-const datosCliente = [];
-
-
-const ingreso = logIn();
-
-if (ingreso) {
-  const menuCervezas = `Elegí una cereveza del menú:
+  
+  const addDatosCliente = (nombre, direccion, localidad, codigoPostal) => {
+    const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
+    datosCliente.push(newCliente);
+  };
+  
+  btnEnvio.addEventListener('click', ()=> {
+    formAlert();
+  });
+  
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const nombreCliente = e.target.nombre.value;
+    const direccionCliente = e.target.direccion.value;
+    const localidadCliente = e.target.localidad.value;
+    const codigoPostalCliente = e.target.codigoPostal.value;
+    addDatosCliente(nombreCliente, direccionCliente, localidadCliente, codigoPostalCliente);
+    console.log(datosCliente);
+    mostrarListaCliente();
+  });
+  
+  // datosCliente.push(
+    //   new Cliente(
+      //     nombreCliente,
+      //     direccionCliente,
+      //     localidadCliente,
+      //     codigoPostalCliente
+      //   )
+      // );
+      const mostrarListaCliente = ()=> {
+        let contenedor = document.getElementById('listaCliente');
+        datosCliente.forEach (datosLista =>{
+          contenedor.innerHTML = `
+        <span>Datos para el envio:<span>
+        <h4> ${datosLista.nombre}<h4>
+        <h4> ${datosLista.direccion}<h4>
+        <h4> ${datosLista.localidad}<h4>
+        <h4> ${datosLista.codigoPostal}<h4>`;
+        })
+        };
+  };
+  
+  // Main
+  const drago = new Cerveza("roja", "Drago", 100, 7, 1);
+  const larry = new Cerveza("negra", "Larry guaits", 100, 7, 1);
+  const apollo = new Cerveza("negra", "Apollo", 100, 7, 1);
+  const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7, 1);
+  const carrito = new Carrito();
+  const datosCliente = [];
+  const form = document.getElementById('formCliente');
+  
+  
+  const ingreso = logIn();
+  
+  if (ingreso) {
+    const menuCervezas = `Elegí una cereveza del menú:
     [1] ${drago.nombre} - ${drago.estilo} $${drago.precio}
     [2] ${larry.nombre} - ${larry.estilo} $${larry.precio}
     [3] ${apollo.nombre} - ${apollo.estilo} $${apollo.precio}
     [4] ${trigo.nombre} - ${trigo.estilo} $${trigo.precio}
     [0] Terminar seleccion.`;
-
-  let opcion;
-  let salir = false;
-  //let birraElegida;
-
-  do {
-    opcion = prompt(menuCervezas);
-
-    switch (opcion) {
-      case "1":
-        //birraElegida = drago;
-        //salir = true;
-        carrito.sumar(drago);
-        break;
-
-      case "2":
-        //birraElegida = larry;
-        //salir = true;
-        carrito.sumar(larry);
-        break;
-
-      case "3":
-        //birraElegida = apollo;
-        //salir = true;
-        carrito.sumar(apollo);
-        break;
-
-      case "4":
-        //birraElegida = trigo;
-        //salir = true;
-        carrito.sumar(trigo);
-        break;
-
-      case "0":
-        salir = true;
-        break;
-
-      default:
-        alert("Opcion no valida");
-        break;
-    }
-  } while (opcion < "0" || opcion > "4" || salir == false);
-
-  carrito.listar();
-
-  //   let birraCantidad = prompt(
-  //     "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
+    
+    let opcion;
+    let salir = false;
+    //let birraElegida;
+    
+    do {
+      opcion = prompt(menuCervezas);
+      
+      switch (opcion) {
+        case "1":
+          //birraElegida = drago;
+          //salir = true;
+          carrito.sumar(drago);
+          break;
+          
+          case "2":
+            //birraElegida = larry;
+            //salir = true;
+            carrito.sumar(larry);
+            break;
+            
+            case "3":
+              //birraElegida = apollo;
+              //salir = true;
+              carrito.sumar(apollo);
+              break;
+              
+              case "4":
+                //birraElegida = trigo;
+                //salir = true;
+                carrito.sumar(trigo);
+                break;
+                
+                case "0":
+                  salir = true;
+                  break;
+                  
+                  default:
+                    alert("Opcion no valida");
+                    break;
+                  }
+                } while (opcion < "0" || opcion > "4" || salir == false);
+                
+                carrito.listar();
+                
+                //   let birraCantidad = prompt(
+                  //     "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
   //   );
   //   while (isNaN(birraCantidad) || birraCantidad <= 0) {
   //     if (isNaN(birraCantidad)) {
-  //       alert("Ingresa un numero");
-  //     } else {
-  //       alert("Cantidad incorrecta");
-  //     }
-  //     birraCantidad = prompt(
-  //       "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
-  //     );
-  //   }
-
-  //   let total = birraElegida.totalIva() * birraCantidad;
-
-  //   const ticket =
-  //     birraElegida.nombre +
-  //     ":\n" +
-  //     birraCantidad +
-  //     "x" +
-  //     birraElegida.precio +
-  //     "\n Total: $" +
-  //     total;
-
-  //   alert(ticket);
-}
-
-const tarea = envio();
+    //       alert("Ingresa un numero");
+    //     } else {
+      //       alert("Cantidad incorrecta");
+      //     }
+      //     birraCantidad = prompt(
+        //       "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
+        //     );
+        //   }
+        
+        //   let total = birraElegida.totalIva() * birraCantidad;
+        
+        //   const ticket =
+        //     birraElegida.nombre +
+        //     ":\n" +
+        //     birraCantidad +
+        //     "x" +
+        //     birraElegida.precio +
+        //     "\n Total: $" +
+        //     total;
+        
+        //   alert(ticket);
+      }
+      
+      const tarea = envio();
+      

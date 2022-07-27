@@ -95,6 +95,17 @@ nav {
     font-size: 2em;
 }
 
+.formulario{
+    display: grid;
+    width: 300px;
+    background-color:whitesmoke;
+    color: darkred;
+    font-family: "Krub", sans-serif;
+    border: 2px solid black;
+    text-align: justify;
+    padding: 15px;
+}
+
 .listaCliente {
     width: 200px;
     border: whitesmoke solid 2px;
