@@ -1,34 +1,18 @@
 // Clases
 class Cerveza {
-  constructor(estilo, nombre, precio, litros, cantidad) {
+  constructor(estilo, nombre, precio, litros, img) {
     this.estilo = estilo;
     this.nombre = nombre;
     this.precio = precio < 0 ? 0 : precio;
     // this.precio = parseFloat(precio);
     this.litros = litros < 0 ? 0 : litros;
-    this.cantidad = cantidad < 0 ? 0 : cantidad;
-    this.vendido = false;
-  }
-  totalIva() {
-    return this.precio * this.cantidad * 1.21;
-  }
+    this.img = img;
+  };
 
-  vender() {
-    this.vendido = true;
-  }
-
-  mostrar() {
-    return (
-      "Nombre: " +
-      this.nombre +
-      " x " +
-      this.cantidad +
-      " Total = $" +
-      this.totalIva() +
-      "\n"
-    );
-  }
-}
+  toString() {
+    return "Nombre: " + this.nombre + " x " + this.cantidad;
+  };
+};
 
 class Cliente {
   constructor(nombre, direccion, localidad, codigoPostal) {
@@ -36,106 +20,165 @@ class Cliente {
     this.direccion = direccion;
     this.localidad = localidad;
     this.codigoPostal = codigoPostal;
-  }
-}
+  };
+};
+
+class Item {
+  constructor(cerveza, cantidad) {
+      this.cerveza = cerveza;
+      this.cantidad = cantidad;
+  };
+  agregar(cantidad) {
+      this.cantidad += cantidad;
+  };
+
+  tieneDescuento() {
+      return this.cantidad > cantidadDescuento;
+  };
+
+  subtotal() {
+      if(this.tieneDescuento()) {
+          return this.cantidad * this.cerveza.precio * 0.9;
+      };
+      return this.cantidad * this.cerveza.precio;
+  };
+};
 
 class Carrito {
-  constructor() {
-    this.cervezas = [];
-  }
 
-  sumar(cerveza) {
+  constructor() {
+    this.recuperarDeStorage();
+    this.cervezas = [];
+  };
+
+  agregar(cerveza, cantidad) {
+    let item = this.cervezas.find((item) => item.cerveza == cerveza);
+    (item == undefined) ? this.cervezas.push(Item (cerveza, cantidad)) : cerveza.agregar(cantidad);
+    // if(item != undefined) {
+    //     item.agregar(cantidad)
+    // } else { 
+    //     this.cervezas.push(Item(cerveza,cantidad));
+    // };
+  };
+  
+  incrementar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //Si no la encuentra, agregar.
     //Si la encuentra cantidad++
-    let cervezaBuscada = this.cervezas.find(
-      (el) => el.nombre === cerveza.nombre
-    );
-
-    if (cervezaBuscada == undefined) {
-      this.cervezas.push(cerveza);
-    } else {
-      cervezaBuscada.cantidad++;
-    }
-  }
-
+    let cervezaBuscada = this.cervezas.find((el) => el.nombre == cerveza.nombre);
+    cervezaBuscada.cantidad++;
+    // if (cervezaBuscada == undefined) {
+    //   this.cervezas.push(cerveza);
+    // } else {
+    //   cervezaBuscada.cantidad++;
+    // };
+  };
+  
   quitar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //si la encuentra, borrar
     //si no la encuentra, no hacer nada
-    let listafiltrada = this.cervezas.filter(
-      (el) => el.nombre != cerveza.nombre
-    );
-    this.cervezas = listafiltrada;
-  }
-
-  vaciar() {
-    this.cervezas = [];
-  }
-
-  decrementar(cerveza) {
-    //buscar si la cerveza se encuentra dentro de la lista.
-    //si la encuentro, restar cantidad
-    //si no la encuentro, no hace nada.
-    let cervezaBuscada = this.cervezas.find(
-      (el) => el.nombre === cerveza.nombre
-    );
-
-    if (cervezaBuscada != undefined) {
-      cervezaBuscada.cantidad--;
-    }
-  }
-
+    let listafiltrada = this.cervezas.filter((el) => el.nombre != cerveza.nombre);
+      this.cervezas = listafiltrada;
+    };
+    
+    vaciar() {
+      this.cervezas = [];
+    };
+    
+    decrementar(cerveza) {
+      //buscar si la cerveza se encuentra dentro de la lista.
+      //si la encuentro, restar cantidad
+      //si no la encuentro, no hace nada.
+      let cervezaBuscada = this.cervezas.find((el) => el.nombre === cerveza.nombre);
+        if (cervezaBuscada != undefined) {
+          cervezaBuscada.cantidad--;
+        }
+      };
+      
+  //Corregir listar
   listar() {
     let texto = "";
     this.cervezas.forEach((e) => (texto += e.mostrar()));
     texto += "Total: $" + this.total();
     alert(texto);
-  }
+  };
+
+  guardarEnStorage(storage = 'session') {
+    const tipoStorage = (storage === "local")? localStorage : sessionStorage; 
+    tipoStorage.setItem('itemsCarrito', JSON.stringify(this.cervezas));
+  };
+  
+  recuperarDeStorage(storage = 'session') {
+    const tipoStorage = (storage === "local")? localStorage : sessionStorage; 
+    let delStorage = tipoStorage.getItem('itemCarrito');
+    //Si hay un json en el storage, parsear para this.items []. Si no, this.items = [].
+    //(delStorage == undefined) ? this.cervezas = [] : this.cervezas = JSON.parse(tipoStorage.getItem('itemsCarrito'));
+    this.cervezas = (delStorage == undefined) ? [] : JSON.parse(tipoStorage.getItem('itemsCarrito'));
+  };
+
+  totalIva() {
+    return this.precio * this.cantidad * 1.21;
+  };
 
   total() {
     //Sumar totalIva de cada cerveza y return
     let total = 0;
-    this.cervezas.forEach((e) => (total += e.totalIva()));
+    this.listaCarrito.forEach((e) => (total += e.totalIva()));
     return total;
-  }
-}
-
-// Funciones
-function logIn() {
-  let savedPass = "birra";
-  let ingresar = false;
-  let i = 3;
-  
-  while (i > 0 && ingresar == false) {
-    let userPass = prompt("Ingrese su password. Tiene " + i + " intentos");
-    
-    if (userPass == savedPass) {
-      alert("Bienvenido al carrito comunista");
-      ingresar = true;
-    } else {
-      i--;
-      alert("Error de password, le quedan " + i + " intentos");
-    }
-  }
-  
-  return ingresar;
+  };
 };
 
+//Funciones Dom
+
+//Revisar por que no se muestra la imagen en el comentario html. 
+function mostrarCervezasEnDOM(array) {
+  //tomo el div del html y le creo el html dinamico
+  divCarritoItems.innerHTML = '';
+  array.forEach(element => {
+      let html = `<div class="card cardMascota" id="tarjeta${element.nombre}">
+              <h3 class="card-header">Nombre: ${element.nombre}</h3>
+              <img src="../img/Dragon.png" alt=${element.nombre} class="card-img-bottom">
+              <!-- <img src=${element.img} alt=${element.nombre} class="card-img-bottom"> -->
+              <div class="card-body">
+                  <p class="card-text">Estilo: ${element.estilo}</p>
+                  <p class="card-text">Precio: ${element.precio}</p>
+                  <p class="card-text">Litros: ${element.litros}</p>
+              </div>
+              <button type="button" onclick="carrito.agregar(${element})">Agregar al carrito</button>
+              </div>`;
+      divCarritoItems.innerHTML += html;
+      console.log('mostrarCervezas');
+  });
+};
+
+function mostrarCarrito() {
+  listaSeleccion.innerHTML = '';
+  cervezas.forEach((item) => {
+    listSection.innerHTML += `
+      <div class="card-head">
+        <h3>${item.nombre}</h3>
+        <p>${item.estilo}</p>
+      </div>
+      <button class="deleteBtn">Borrar</button>
+    </div>`;  
+  })
+};
+
+// Funciones
 
 
 function envio() {
-  alert("Complete el formulario para realizar el envio");
   const btnEnvio = document.getElementById('boton');
   
   function formAlert () {
     alert('Envio confirmado. Muchas gracias');
   };
   
-  const addDatosCliente = (nombre, direccion, localidad, codigoPostal) => {
-    const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
-    datosCliente.push(newCliente);
-  };
+  // const addDatosCliente = (nombre, direccion, localidad, codigoPostal) => {
+  //   const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
+  //   datosCliente.push(newCliente);
+  // };
   
   btnEnvio.addEventListener('click', ()=> {
     formAlert();
@@ -143,127 +186,49 @@ function envio() {
   
   form.addEventListener('submit', (e)=>{
     e.preventDefault();
-    const nombreCliente = e.target.nombre.value;
-    const direccionCliente = e.target.direccion.value;
-    const localidadCliente = e.target.localidad.value;
-    const codigoPostalCliente = e.target.codigoPostal.value;
-    addDatosCliente(nombreCliente, direccionCliente, localidadCliente, codigoPostalCliente);
+
+    cliente.nombre = e.target.nombre.value;
+    cliente.direccion = e.target.direccion.value;
+    cliente.localidad = e.target.localidad.value;
+    cliente.codigoPostal = e.target.codigoPostal.value;
+
     console.log(datosCliente);
-    mostrarListaCliente();
+    mostrarListaCliente(cliente);
   });
   
-  // datosCliente.push(
-    //   new Cliente(
-      //     nombreCliente,
-      //     direccionCliente,
-      //     localidadCliente,
-      //     codigoPostalCliente
-      //   )
-      // );
-      const mostrarListaCliente = ()=> {
+      const mostrarListaCliente = (cliente)=> {
         let contenedor = document.getElementById('listaCliente');
-        datosCliente.forEach (datosLista =>{
-          contenedor.innerHTML = `
+        contenedor.innerHTML = `
         <span>Datos para el envio:<span>
-        <h4> ${datosLista.nombre}<h4>
-        <h4> ${datosLista.direccion}<h4>
-        <h4> ${datosLista.localidad}<h4>
-        <h4> ${datosLista.codigoPostal}<h4>`;
-        })
+        <h4> ${cliente.nombre}<h4>
+        <h4> ${cliente.direccion}<h4>
+        <h4> ${cliente.localidad}<h4>
+        <h4> ${cliente.codigoPostal}<h4>`;
         };
-  };
+};
   
-  // Main
-  const drago = new Cerveza("roja", "Drago", 100, 7, 1);
-  const larry = new Cerveza("negra", "Larry guaits", 100, 7, 1);
-  const apollo = new Cerveza("negra", "Apollo", 100, 7, 1);
-  const trigo = new Cerveza("rubia", "Ahora con trigo", 100, 7, 1);
-  const carrito = new Carrito();
-  const datosCliente = [];
-  const form = document.getElementById('formCliente');
-  
-  
-  const ingreso = logIn();
-  
-  if (ingreso) {
-    const menuCervezas = `Elegí una cereveza del menú:
-    [1] ${drago.nombre} - ${drago.estilo} $${drago.precio}
-    [2] ${larry.nombre} - ${larry.estilo} $${larry.precio}
-    [3] ${apollo.nombre} - ${apollo.estilo} $${apollo.precio}
-    [4] ${trigo.nombre} - ${trigo.estilo} $${trigo.precio}
-    [0] Terminar seleccion.`;
-    
-    let opcion;
-    let salir = false;
-    //let birraElegida;
-    
-    do {
-      opcion = prompt(menuCervezas);
-      
-      switch (opcion) {
-        case "1":
-          //birraElegida = drago;
-          //salir = true;
-          carrito.sumar(drago);
-          break;
-          
-          case "2":
-            //birraElegida = larry;
-            //salir = true;
-            carrito.sumar(larry);
-            break;
-            
-            case "3":
-              //birraElegida = apollo;
-              //salir = true;
-              carrito.sumar(apollo);
-              break;
-              
-              case "4":
-                //birraElegida = trigo;
-                //salir = true;
-                carrito.sumar(trigo);
-                break;
-                
-                case "0":
-                  salir = true;
-                  break;
-                  
-                  default:
-                    alert("Opcion no valida");
-                    break;
-                  }
-                } while (opcion < "0" || opcion > "4" || salir == false);
-                
-                carrito.listar();
-                
-                //   let birraCantidad = prompt(
-                  //     "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
-  //   );
-  //   while (isNaN(birraCantidad) || birraCantidad <= 0) {
-  //     if (isNaN(birraCantidad)) {
-    //       alert("Ingresa un numero");
-    //     } else {
-      //       alert("Cantidad incorrecta");
-      //     }
-      //     birraCantidad = prompt(
-        //       "¿Cuantas unidades de " + birraElegida.nombre + " queres?"
-        //     );
-        //   }
-        
-        //   let total = birraElegida.totalIva() * birraCantidad;
-        
-        //   const ticket =
-        //     birraElegida.nombre +
-        //     ":\n" +
-        //     birraCantidad +
-        //     "x" +
-        //     birraElegida.precio +
-        //     "\n Total: $" +
-        //     total;
-        
-        //   alert(ticket);
-      }
-      
-      const tarea = envio();
+// Main
+
+//Catalogo
+const cervezas = [
+  new Cerveza("roja", "Drago", 100, 7, 1,'./img/Dragon.png'),
+  new Cerveza("negra", "Larry guaits", 100, 7, 1,'./img/Dragon.png'),
+  new Cerveza("negra", "Apollo", 100, 7, 1,'./img/Dragon.png'),
+  new Cerveza("rubia", "Ahora con trigo", 100, 7, 1,'./img/Dragon.png'),
+];
+
+//Variables globales
+const carrito = new Carrito();
+const cliente = new Cliente();
+
+//elementos del DOM
+const form = document.getElementById('formCliente');
+const divCarritoItems = document.getElementById('carritoDiv');
+const main = document.getElementById('main');
+const listaSeleccion = document.getElementById('listaSeleccion');
+
+  //Ejecucion funciones del DOM
+  const mostrar = mostrarCervezasEnDOM(cervezas);
+  const tarea = envio();
+  const mCarrito = mostrarCarrito();
       

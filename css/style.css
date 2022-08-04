@@ -121,6 +121,46 @@ nav {
     width: 60px;
 }
 
+.listaSeleccion {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(155, 146, 25);
+    margin: 2rem;
+    padding: 0 1rem;
+    }
+
+    .card-head {
+        text-align: center;
+        width: 20%;
+      }
+      
+      .card-head > h3 {
+        font-size: x-large;
+      }
+      
+      .card-head > p {
+        color: goldenrod;
+        font-size: larger;
+      }
+      
+      .card-description {
+        width: 50%;
+      }
+
+      button {
+        padding: .5rem 1rem;
+        margin: 1rem;
+        border-radius: 1rem;
+        border: none;
+        color: rgb(240, 248, 255);
+        background-color: rgb(139, 34, 34);
+      }
+
+      .deleteBtn {
+        background-color: rgb(224, 228, 11);
+      }
 
 footer {
     background-color: black;
