@@ -52,28 +52,16 @@ class Carrito {
   };
 
   agregar(cerveza, cantidad) {
-    let item = this.cervezas.find((item) => item.cerveza == cerveza);
-    item == undefined? this.cervezas.push(Item(cerveza, cantidad)): cerveza.agregar(cantidad);
-    // if(item != undefined) {
-    //     item.agregar(cantidad)
-    // } else {
-    //     this.cervezas.push(Item(cerveza,cantidad));
-    // };
+    let item = this.cervezas.find((item) => item.cerveza === cerveza);
+    item ? this.incrementar(cerveza) : this.cervezas.push (new Item (cerveza,cantidad));
   };
 
   incrementar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //Si no la encuentra, agregar.
     //Si la encuentra cantidad++
-    let cervezaBuscada = this.cervezas.find(
-      (el) => el.nombre == cerveza.nombre
-    );
-    cervezaBuscada.cantidad++;
-    // if (cervezaBuscada == undefined) {
-    //   this.cervezas.push(cerveza);
-    // } else {
-    //   cervezaBuscada.cantidad++;
-    // };
+    const indice = this.cervezas.findIndex((item) => item.cerveza.nombre === cerveza.nombre)
+    this.cervezas[indice].cantidad++;
   };
 
   borrar(cerveza) {
@@ -107,7 +95,6 @@ class Carrito {
     let texto = "";
     this.cervezas.forEach((e) => (texto += e.mostrar()));
     texto += "Total: $" + this.total();
-    alert(texto);
   };
 
   guardarEnStorage(storage = "session") {
@@ -115,6 +102,7 @@ class Carrito {
     tipoStorage.setItem("itemsCarrito", JSON.stringify(this.cervezas));
   };
 
+  //Usar funcion
   recuperarDeStorage(storage = "session") {
     const tipoStorage = storage === "local" ? localStorage : sessionStorage;
     let delStorage = tipoStorage.getItem("itemCarrito");
@@ -153,7 +141,7 @@ function mostrarCervezasEnDOM(array) {
                   <p class="card-text">Precio: ${element.precio}</p>
                   <p class="card-text">Litros: ${element.litros}</p>
               </div>
-              <button type="button" class="agregarCarrito">Agregar al carrito</button>
+              <button type="button" data-id="${i}" class="agregarCarrito">Agregar al carrito</button>
               </div>`;
     divCarritoItems.innerHTML += html;
     console.log("mostrarCervezas");
@@ -170,24 +158,31 @@ function mostrarCarrito() {
     <p>${item.estilo}</p>
     <p>${item.cantidad}</p>
     </div>
-    <button class="deleteBtn">Borrar</button>
+    <button data-id="${i}" class="deleteBtn">Borrar</button>
     </div>`;
   });
 
   for (const btn of deleteBtn) {
     btn.addEventListener("click", (e) => {
-      borrar(e.target.cerveza.value);
+      const indice = e.target.getAttribute('data-id');
+      const cervezaElegida = carrito.cervezas[indice];
+      carrito.borrar(cervezaElegida);
       mostrarCarrito();
     });
   }
   
   //Modificar y ordenar
-  agregarbtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  // Ejecuto la función para agregar
-    agregar();
-    mostrarCarrito(); // Actualiza la pantalla
-  });
+  for (const btn of agregarbtn) {
+    btn.addEventListener("click", (e) => {
+      const indice = e.target.getAttribute('data-id');
+      const cervezaElegida = cervezas[indice];
+      console.log(cervezaElegida)
+      // Ejecuto la función para agregar
+      carrito.agregar(cervezaElegida, 1);
+      mostrarCarrito(); // Actualiza la pantalla
+    });
+  };
+
 };
 
 // Funciones
@@ -235,10 +230,10 @@ function envio() {
   
   //Catalogo
   const cervezas = [
-    new Cerveza("roja", "Drago", 100, 7, 1, "./img/Dragon.png"),
-    new Cerveza("negra", "Larry guaits", 100, 7, 1, "./img/Dragon.png"),
-    new Cerveza("negra", "Apollo", 100, 7, 1, "./img/Dragon.png"),
-    new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "./img/Dragon.png"),
+    new Cerveza("roja", "Drago", 100, 7, 1, "https://drive.google.com/file/d/1BTsxURRFrh9zMr4-JlOJ4Ov59JzELn0_/view?usp=sharing"),
+    new Cerveza("negra", "Larry guaits", 100, 7, 1, "https://drive.google.com/file/d/1jBMgHcF4wHkqnvNBCkG9y_9mXfT-nffQ/view?usp=sharing"),
+    new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
+    new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
   ];
   
   //Variables globales
