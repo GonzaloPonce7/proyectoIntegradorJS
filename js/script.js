@@ -48,41 +48,41 @@ class Item {
 class Carrito {
   constructor() {
     this.recuperarDeStorage();
-    this.cervezas = [];
+    this.items = [];
   };
 
   agregar(cerveza, cantidad) {
-    let item = this.cervezas.find((item) => item.cerveza === cerveza);
-    item ? this.incrementar(cerveza) : this.cervezas.push (new Item (cerveza,cantidad));
+    let item = this.items.find((item) => item.cerveza.nombre == cerveza.nombre);
+    item ? this.incrementar(cerveza) : this.items.push (new Item (cerveza,cantidad));
   };
 
   incrementar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //Si no la encuentra, agregar.
     //Si la encuentra cantidad++
-    const indice = this.cervezas.findIndex((item) => item.cerveza.nombre === cerveza.nombre)
-    this.cervezas[indice].cantidad++;
+    const indice = this.items.findIndex((item) => item.cerveza.nombre === cerveza.nombre)
+    this.items[indice].cantidad++;
   };
 
   borrar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //si la encuentra, borrar
     //si no la encuentra, no hacer nada
-    let listafiltrada = this.cervezas.filter(
-      (el) => el.nombre != cerveza.nombre
+    let listafiltrada = this.items.filter(
+      (el) => el.cerveza != cerveza
     );
-    this.cervezas = listafiltrada;
+    this.items = listafiltrada;
   };
 
   vaciar() {
-    this.cervezas = [];
+    this.items = [];
   };
 
   decrementar(cerveza) {
     //buscar si la cerveza se encuentra dentro de la lista.
     //si la encuentro, restar cantidad
     //si no la encuentro, no hace nada.
-    let cervezaBuscada = this.cervezas.find(
+    let cervezaBuscada = this.items.find(
       (el) => el.nombre === cerveza.nombre
     );
     if (cervezaBuscada != undefined) {
@@ -93,13 +93,13 @@ class Carrito {
   //Corregir listar
   listar() {
     let texto = "";
-    this.cervezas.forEach((e) => (texto += e.mostrar()));
+    this.items.forEach((e) => (texto += e.mostrar()));
     texto += "Total: $" + this.total();
   };
 
   guardarEnStorage(storage = "session") {
     const tipoStorage = storage === "local" ? localStorage : sessionStorage;
-    tipoStorage.setItem("itemsCarrito", JSON.stringify(this.cervezas));
+    tipoStorage.setItem("itemsCarrito", JSON.stringify(this.items));
   };
 
   //Usar funcion
@@ -107,8 +107,8 @@ class Carrito {
     const tipoStorage = storage === "local" ? localStorage : sessionStorage;
     let delStorage = tipoStorage.getItem("itemCarrito");
     //Si hay un json en el storage, parsear para this.items []. Si no, this.items = [].
-    //(delStorage == undefined) ? this.cervezas = [] : this.cervezas = JSON.parse(tipoStorage.getItem('itemsCarrito'));
-    this.cervezas =
+    //(delStorage == undefined) ? this.items = [] : this.items = JSON.parse(tipoStorage.getItem('itemsCarrito'));
+    this.items =
       delStorage == undefined ? [] : JSON.parse(tipoStorage.getItem("itemsCarrito"));
   };
 
@@ -119,7 +119,7 @@ class Carrito {
   total() {
     //Sumar totalIva de cada cerveza y return
     let total = 0;
-    this.cervezas.precio.forEach((e) => (total += e.totalIva()));
+    this.items.precio.forEach((e) => (total += e.totalIva()));
     return total;
   };
 };
@@ -131,11 +131,11 @@ function mostrarCervezasEnDOM(array) {
   const divCarritoItems = document.getElementById("carritoDiv");
   //tomo el div del html y le creo el html dinamico
   divCarritoItems.innerHTML = "";
-  array.forEach((element) => {
-    let html = `<div class="card cardMascota" id="tarjeta${element.nombre}">
+  array.forEach((element, i) => {
+    let html = `<div class="card" id="tarjeta${element.nombre}">
               <h3 class="card-header">Nombre: ${element.nombre}</h3>
-              <img src="../img/Dragon.png" alt=${element.nombre} class="card-img-bottom">
-              <!-- <img src=${element.img} alt=${element.nombre} class="card-img-bottom"> -->
+              <!--<img src="../img/Dragon.png" alt=${element.nombre} class="card-img-bottom">-->
+              <img src=${element.img} alt=${element.nombre} class="card-img-bottom"> 
               <div class="card-body">
                   <p class="card-text">Estilo: ${element.estilo}</p>
                   <p class="card-text">Precio: ${element.precio}</p>
@@ -151,71 +151,47 @@ function mostrarCervezasEnDOM(array) {
 function mostrarCarrito() {
   
   listaSeleccion.innerHTML = "";
-  cervezas.forEach((item) => {
+  carrito.items.forEach((item, i) => {
     listaSeleccion.innerHTML += `
     <div class="card-head">
-    <h3>${item.nombre}</h3>
-    <p>${item.estilo}</p>
-    <p>${item.cantidad}</p>
-    </div>
+    <h3>${item.cerveza.nombre}</h3>
+    <p>${item.cerveza.estilo}</p>
+    <label for="cantidad_${i}">Cantidad</label>
+    <input id="cantidad_${i}" type="number" value="${item.cantidad}" min="0"> 
+    <!--<p>${item.cantidad}</p>-->
     <button data-id="${i}" class="deleteBtn">Borrar</button>
     </div>`;
   });
-
   for (const btn of deleteBtn) {
     btn.addEventListener("click", (e) => {
       const indice = e.target.getAttribute('data-id');
-      const cervezaElegida = carrito.cervezas[indice];
+      const cervezaElegida = carrito.items[indice].cerveza;
       carrito.borrar(cervezaElegida);
       mostrarCarrito();
     });
   }
-  
-  //Modificar y ordenar
-  for (const btn of agregarbtn) {
-    btn.addEventListener("click", (e) => {
-      const indice = e.target.getAttribute('data-id');
-      const cervezaElegida = cervezas[indice];
-      console.log(cervezaElegida)
-      // Ejecuto la función para agregar
-      carrito.agregar(cervezaElegida, 1);
-      mostrarCarrito(); // Actualiza la pantalla
-    });
-  };
-
 };
 
 // Funciones
 
+function guardarCarrito() {
+  localStorage.setItem("carrito", JSON.stringify(carrito));
+};
+
+function recuperarCarrito() {
+    return Object.assign(new Carrito(), JSON.parse(localStorage.getItem("carrito")));
+};
+
 function envio() {
   
-  
-  function formAlert() {
-    alert("Envio confirmado. Muchas gracias");
-  }
-  
   // const addDatosCliente = (nombre, direccion, localidad, codigoPostal) => {
-    //   const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
-    //   datosCliente.push(newCliente);
-    // };
-    
-    btnEnvio.addEventListener("click", () => {
-      formAlert();
-    });
-    
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      
-      cliente.nombre = e.target.nombre.value;
-      cliente.direccion = e.target.direccion.value;
-      cliente.localidad = e.target.localidad.value;
-      cliente.codigoPostal = e.target.codigoPostal.value;
-      
-      console.log(cliente);
-      mostrarListaCliente(cliente);
-    });
-    
-    const mostrarListaCliente = (cliente) => {
+  // const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
+  // datosCliente.push(newCliente);
+  // };
+  
+  
+  
+  const mostrarListaCliente = (cliente) => {
       let contenedor = document.getElementById("listaCliente");
       contenedor.innerHTML = `
       <span>Datos para el envio:<span>
@@ -224,32 +200,97 @@ function envio() {
       <h4> ${cliente.localidad}<h4>
       <h4> ${cliente.codigoPostal}<h4>`;
     };
-  };
+};
+
+// Main
+
+//Catalogo
+const cervezas = [
+  new Cerveza("roja", "Drago", 100, 7, 1, "https://drive.google.com/file/d/1BTsxURRFrh9zMr4-JlOJ4Ov59JzELn0_/view?usp=sharing"),
+  new Cerveza("negra", "Larry guaits", 100, 7, 1, "https://drive.google.com/file/d/1jBMgHcF4wHkqnvNBCkG9y_9mXfT-nffQ/view?usp=sharing"),
+  new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
+  new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
+];
+
+//Variables globales
+//const carrito = recuperarCarrito() == undefined ? recuperarCarrito() : new Carrito();
+const carrito = recuperarCarrito() || new Carrito();
+const cliente = new Cliente();
+
+//elementos del DOM
+const main = document.getElementById("main");
+const listaSeleccion = document.getElementById('listaSeleccion');
+const deleteBtn = document.getElementsByClassName('deleteBtn');
+const agregarbtn = document.getElementsByClassName('agregarCarrito');
+const form = document.getElementById("formCliente");
+const btnEnvio = document.getElementById("boton");
+const btnComprar = document.getElementById("btnComprar");
+
+//Ejecucion funciones del DOM
+const mostrar = mostrarCervezasEnDOM(cervezas);
+const mCarrito = mostrarCarrito();
+//const tarea = envio();
+
+
+// Eventos
+
+//Modificar y ordenar
+for (const btn of agregarbtn) {
+  btn.addEventListener("click", (e) => {
+    const indice = e.target.getAttribute('data-id');
+    const cervezaElegida = cervezas[indice];
+    console.log(cervezaElegida)
+    // Ejecuto la función para agregar
+    carrito.agregar(cervezaElegida, 1);
+    mostrarCarrito(); // Actualiza la pantalla
+    guardarCarrito();
+  });
+};
+
+// form.addEventListener("submit", (e) => {
+//     e.preventDefault();
+//     cliente.nombre = e.target.nombre.value;
+//     cliente.direccion = e.target.direccion.value;
+//     cliente.localidad = e.target.localidad.value;
+//     cliente.codigoPostal = e.target.codigoPostal.value;
+
+//     console.log(cliente);
+//     mostrarListaCliente(cliente);
+// });
+
+btnComprar.addEventListener("click", ()=>{
+  (async () => {
   
-  // Main
-  
-  //Catalogo
-  const cervezas = [
-    new Cerveza("roja", "Drago", 100, 7, 1, "https://drive.google.com/file/d/1BTsxURRFrh9zMr4-JlOJ4Ov59JzELn0_/view?usp=sharing"),
-    new Cerveza("negra", "Larry guaits", 100, 7, 1, "https://drive.google.com/file/d/1jBMgHcF4wHkqnvNBCkG9y_9mXfT-nffQ/view?usp=sharing"),
-    new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
-    new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
-  ];
-  
-  //Variables globales
-  const carrito = new Carrito();
-  const cliente = new Cliente();
-  
-  //elementos del DOM
-  const main = document.getElementById("main");
-  const listaSeleccion = document.getElementById('listaSeleccion');
-  const deleteBtn = document.getElementsByClassName('deleteBtn');
-  const agregarbtn = document.getElementsByClassName('agregarCarrito');
-  const form = document.getElementById("formCliente");
-  const btnEnvio = document.getElementById("boton");
-  
-  //Ejecucion funciones del DOM
-  const mostrar = mostrarCervezasEnDOM(cervezas);
-  const tarea = envio();
-  const mCarrito = mostrarCarrito();
-  
+    const { value: formValues } = await Swal.fire({
+      title: 'Formulario de Envio',
+      html:
+      '<span>Nombre y Apellido: </span>' + 
+      '<input id="swal-input1" class="swal2 input">'+'<br>'+
+      '<span>Direccion: </span>'
+      +'<input id="swal-input2" class="swal2-input">' +
+      '<span>Localidad: </span>'
+      +'<input id="swal-input3" class="swal2-input">'+'<br>'+
+      '<span>Codigo Postal: </span>'+ '<br>' +
+      '<input id="swal-input4" class="swal2-input">',
+      focusConfirm: false,
+      preConfirm: () => {
+        return [
+          document.getElementById('swal-input1').value,
+          document.getElementById('swal-input2').value,
+          document.getElementById('swal-input3').value,
+          document.getElementById('swal-input4').value,
+        ]
+      }
+    })
+    
+    if (formValues) {
+      Swal.fire(JSON.stringify(formValues))
+      cliente.nombre = e.target.input1.value;
+      cliente.direccion = e.target.input2.value;
+      cliente.localidad = e.target.input3.value;
+      cliente.codigoPostal = e.target.input4.value;
+    }
+    
+    })()
+
+})
