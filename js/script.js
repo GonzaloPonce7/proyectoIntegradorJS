@@ -179,19 +179,22 @@ function guardarCarrito() {
 };
 
 function recuperarCarrito() {
-    return Object.assign(new Carrito(), JSON.parse(localStorage.getItem("carrito")));
+  return Object.assign(new Carrito(), JSON.parse(localStorage.getItem("carrito")));
 };
 
 function envio() {
   
-  // const addDatosCliente = (nombre, direccion, localidad, codigoPostal) => {
-  // const newCliente = new Cliente(nombre, direccion, localidad, codigoPostal);
-  // datosCliente.push(newCliente);
-  // };
-  
-  
-  
-  const mostrarListaCliente = (cliente) => {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    cliente.nombre = e.target.nombre.value;
+    cliente.direccion = e.target.direccion.value;
+    cliente.localidad = e.target.localidad.value;
+    cliente.codigoPostal = e.target.codigoPostal.value;
+    console.log(cliente);
+    mostrarListaCliente(cliente);
+  });
+    
+    const mostrarListaCliente = (cliente) => {
       let contenedor = document.getElementById("listaCliente");
       contenedor.innerHTML = `
       <span>Datos para el envio:<span>
@@ -200,17 +203,18 @@ function envio() {
       <h4> ${cliente.localidad}<h4>
       <h4> ${cliente.codigoPostal}<h4>`;
     };
-};
 
-// Main
+  };
 
-//Catalogo
-const cervezas = [
-  new Cerveza("roja", "Drago", 100, 7, 1, "https://drive.google.com/file/d/1BTsxURRFrh9zMr4-JlOJ4Ov59JzELn0_/view?usp=sharing"),
-  new Cerveza("negra", "Larry guaits", 100, 7, 1, "https://drive.google.com/file/d/1jBMgHcF4wHkqnvNBCkG9y_9mXfT-nffQ/view?usp=sharing"),
-  new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
-  new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
-];
+  // Main
+  
+  //Catalogo
+  const cervezas = [
+    new Cerveza("roja", "Drago", 100, 7, 1, "https://drive.google.com/file/d/1BTsxURRFrh9zMr4-JlOJ4Ov59JzELn0_/view?usp=sharing"),
+    new Cerveza("negra", "Larry guaits", 100, 7, 1, "https://drive.google.com/file/d/1jBMgHcF4wHkqnvNBCkG9y_9mXfT-nffQ/view?usp=sharing"),
+    new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
+    new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
+  ];
 
 //Variables globales
 //const carrito = recuperarCarrito() == undefined ? recuperarCarrito() : new Carrito();
@@ -247,31 +251,20 @@ for (const btn of agregarbtn) {
   });
 };
 
-// form.addEventListener("submit", (e) => {
-//     e.preventDefault();
-//     cliente.nombre = e.target.nombre.value;
-//     cliente.direccion = e.target.direccion.value;
-//     cliente.localidad = e.target.localidad.value;
-//     cliente.codigoPostal = e.target.codigoPostal.value;
 
-//     console.log(cliente);
-//     mostrarListaCliente(cliente);
-// });
-
-btnComprar.addEventListener("click", ()=>{
-  (async () => {
-  
+btnComprar.addEventListener("click", async ()=>{
+  ''
     const { value: formValues } = await Swal.fire({
       title: 'Formulario de Envio',
       html:
       '<span>Nombre y Apellido: </span>' + 
-      '<input id="swal-input1" class="swal2 input">'+'<br>'+
+      '<input id="swal-input1" name="name" class="swal2-input">'+'<br>'+
       '<span>Direccion: </span>'
-      +'<input id="swal-input2" class="swal2-input">' +
+      +'<input id="swal-input2" name="direccion" class="swal2-input">' +
       '<span>Localidad: </span>'
-      +'<input id="swal-input3" class="swal2-input">'+'<br>'+
+      +'<input id="swal-input3" name="localidad" class="swal2-input">'+'<br>'+
       '<span>Codigo Postal: </span>'+ '<br>' +
-      '<input id="swal-input4" class="swal2-input">',
+      '<input id="swal-input4" name="codigo" class="swal2-input">',
       focusConfirm: false,
       preConfirm: () => {
         return [
@@ -285,12 +278,8 @@ btnComprar.addEventListener("click", ()=>{
     
     if (formValues) {
       Swal.fire(JSON.stringify(formValues))
-      cliente.nombre = e.target.input1.value;
-      cliente.direccion = e.target.input2.value;
-      cliente.localidad = e.target.input3.value;
-      cliente.codigoPostal = e.target.input4.value;
+      const nuevoCliente = new Cliente(formValues.nombre, formValues.direccion, formValues.localidad, formValues.codigoPostal);
+      console.log(nuevoCliente);
     }
     
-    })()
-
 })
