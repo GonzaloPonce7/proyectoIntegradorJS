@@ -124,8 +124,8 @@ class Carrito {
   };
 };
 
-//Funciones Dom
 
+//Funciones Dom
 //Revisar por que no se muestra la imagen en el comentario html.
 function mostrarCervezasEnDOM(array) {
   const divCarritoItems = document.getElementById("carritoDiv");
@@ -176,6 +176,16 @@ function mostrarCarrito() {
 
 function guardarCarrito() {
   localStorage.setItem("carrito", JSON.stringify(carrito));
+
+  fetch ('https://jsonplaceholder.typicode.com/posts', {
+    method: 'POST',
+    body: JSON.stringify(carrito),
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8',
+    },
+  })
+    .then((response) => response.json())
+    .then((json) => console.log(json));
 };
 
 function recuperarCarrito() {
@@ -193,19 +203,19 @@ function envio() {
     console.log(cliente);
     mostrarListaCliente(cliente);
   });
-    
-    const mostrarListaCliente = (cliente) => {
-      let contenedor = document.getElementById("listaCliente");
-      contenedor.innerHTML = `
-      <span>Datos para el envio:<span>
-      <h4> ${cliente.nombre}<h4>
+  
+  const mostrarListaCliente = (cliente) => {
+    let contenedor = document.getElementById("listaCliente");
+    contenedor.innerHTML = `
+    <span>Datos para el envio:<span>
+    <h4> ${cliente.nombre}<h4>
       <h4> ${cliente.direccion}<h4>
       <h4> ${cliente.localidad}<h4>
       <h4> ${cliente.codigoPostal}<h4>`;
     };
-
+    
   };
-
+  
   // Main
   
   //Catalogo
@@ -215,32 +225,31 @@ function envio() {
     new Cerveza("negra", "Apollo", 100, 7, 1, "https://drive.google.com/file/d/1DWp2POd9a-Z-nyCNZeVbllYi5YmnVYFd/view?usp=sharing"),
     new Cerveza("rubia", "Ahora con trigo", 100, 7, 1, "https://drive.google.com/file/d/1mayTiyZX36uuIVHdgO0xleNuM828Fk2-/view?usp=sharing"),
   ];
-
-//Variables globales
-//const carrito = recuperarCarrito() == undefined ? recuperarCarrito() : new Carrito();
-const carrito = recuperarCarrito() || new Carrito();
-const cliente = new Cliente();
-
-//elementos del DOM
-const main = document.getElementById("main");
-const listaSeleccion = document.getElementById('listaSeleccion');
-const deleteBtn = document.getElementsByClassName('deleteBtn');
-const agregarbtn = document.getElementsByClassName('agregarCarrito');
-const form = document.getElementById("formCliente");
-const btnEnvio = document.getElementById("boton");
-const btnComprar = document.getElementById("btnComprar");
-
-//Ejecucion funciones del DOM
-const mostrar = mostrarCervezasEnDOM(cervezas);
-const mCarrito = mostrarCarrito();
-//const tarea = envio();
-
-
-// Eventos
-
-//Modificar y ordenar
-for (const btn of agregarbtn) {
-  btn.addEventListener("click", (e) => {
+  
+  //Variables globales
+  //const carrito = recuperarCarrito() == undefined ? recuperarCarrito() : new Carrito();
+  const carrito = recuperarCarrito() || new Carrito();
+  const cliente = new Cliente();
+  
+  //elementos del DOM
+  const main = document.getElementById("main");
+  const listaSeleccion = document.getElementById('listaSeleccion');
+  const deleteBtn = document.getElementsByClassName('deleteBtn');
+  const agregarbtn = document.getElementsByClassName('agregarCarrito');
+  const form = document.getElementById("formCliente");
+  const btnEnvio = document.getElementById("boton");
+  const btnComprar = document.getElementById("btnComprar");
+  
+  //Ejecucion funciones del DOM
+  const mostrar = mostrarCervezasEnDOM(cervezas);
+  const mCarrito = mostrarCarrito();
+  //const tarea = envio();
+  
+  
+  // Eventos
+  
+  for (const btn of agregarbtn) {
+    btn.addEventListener("click", (e) => {
     const indice = e.target.getAttribute('data-id');
     const cervezaElegida = cervezas[indice];
     console.log(cervezaElegida)
@@ -254,8 +263,8 @@ for (const btn of agregarbtn) {
 
 btnComprar.addEventListener("click", async ()=>{
   ''
-    const { value: formValues } = await Swal.fire({
-      title: 'Formulario de Envio',
+  const { value: formValues } = await Swal.fire({
+    title: 'Formulario de Envio',
       html:
       '<span>Nombre y Apellido: </span>' + 
       '<input id="swal-input1" name="name" class="swal2-input">'+'<br>'+
@@ -277,9 +286,20 @@ btnComprar.addEventListener("click", async ()=>{
     })
     
     if (formValues) {
-      Swal.fire(JSON.stringify(formValues))
+      Swal.fire(`Gracias ${formValues.nombre}`)
+      //JSON.stringify(formValues)
+      fetch ('https://jsonplaceholder.typicode.com/posts', {
+        method: 'POST',
+        body: JSON.stringify(formValues),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      })
+        .then((response) => response.json())
+        .then((json) => console.log(json));
+
       const nuevoCliente = new Cliente(formValues.nombre, formValues.direccion, formValues.localidad, formValues.codigoPostal);
       console.log(nuevoCliente);
     }
     
-})
+  });
