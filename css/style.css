@@ -106,61 +106,52 @@ nav {
     padding: 15px;
 }
 
-.listaCliente {
-    width: 200px;
-    border: whitesmoke solid 2px;
-    margin: 2em;
-    list-style: none;
-    font-family: "Krub", sans-serif;
-    color: aliceblue;
-    padding-left: 10px;
-}
-
 .imgBirraSelect{
     height: 50px;
     width: 60px;
 }
 
+
+.offcanvas-body {
+    flex-grow: 1;
+    padding: 1rem 1rem;
+    overflow-y: auto;
+}
+
 .listaSeleccion {
     display: flex;
-    flex-flow: row wrap;
+    flex-direction: row;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     background-color: rgb(155, 146, 25);
-    margin: 2rem;
-    padding: 0 1rem;
+    padding: 1rem 1rem;
     }
 
     .card-head {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
         text-align: center;
         width: 20%;
-      }
-      
-      .card-head > h3 {
-        font-size: x-large;
-      }
-      
-      .card-head > p {
-        color: goldenrod;
-        font-size: larger;
-      }
-      
-      .card-description {
-        width: 50%;
-      }
+    }
 
-      button {
-        padding: .5rem 1rem;
+    .total{
+        font-size: large;
+    }
+
+    button {
+        padding: .5rem 0.5rem;
         margin: 1rem;
         border-radius: 1rem;
         border: none;
         color: rgb(240, 248, 255);
         background-color: rgb(139, 34, 34);
-      }
+    }
 
-      .deleteBtn {
+    .deleteBtn {
         background-color: rgb(224, 228, 11);
-      }
+    }
 
 footer {
     background-color: black;

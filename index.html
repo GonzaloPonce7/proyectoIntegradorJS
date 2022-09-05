@@ -64,24 +64,19 @@
         <h1>Tienda</h1>
         
         <div id="carritoDiv" class="carritoDiv"></div>
-        <div id="listaSeleccion" class="listaSeleccion"></div>
-        <button id="btnComprar">Comprar</button>
-
-        <!-- <form id="formCliente" action="" class="formulario">
-            <span>Nombre y Apellido:</span>
-            <input type="text" id="nombre" name="nombre" placeholder="Bruno Diaz">
-            <span>Direccion:</span>
-            <input type="text" id="direccion" name="direccion" placeholder="Siempreviva 123">
-            <span>Localidad:</span>
-            <input type="text" id="localidad" name="localidad" >
-            <span>Codigo Postal:</span>
-            <input type="number" id="codigoPostal" name="codigoPostal">
-            <button type="submit" id="boton">Enviar</button>
-        </form> -->
-
-        <div id="listaCliente" class="listaCliente"></div>
-
-
+        <!-- <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Enable both scrolling & backdrop</button> -->
+        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Carrito</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div id="listaSeleccion" class="listaSeleccion"></div>
+                <div class="total" id="total"></div>
+                <button id="btnVaciar">Vaciar</button>
+                <button id="btnComprar">Comprar</button>
+            </div>
+        </div>
     </main>
 
     <footer class="site-footer">
